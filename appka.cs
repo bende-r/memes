@@ -1,9 +1,10 @@
 /****** csharp ******/
-//https://godbolt.org/z/Pnacer19T
+//https://godbolt.org/z/4Wvbn7j6f
 using System;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
 
@@ -604,6 +605,19 @@ public class Relations
         Console.WriteLine(FormatFriendshipsAsYamlLike(friendships));
     }
 
+    private static void Fill(char []arg, char filler = ' ')
+    {
+        var runtimeVersion = Environment.Version;
+        if (runtimeVersion >= new Version(6, 0) || runtimeVersion <= new Version(7, 0))
+        {
+            Array.Fill(arg, ' ');
+        }else{
+            for (int i = 0; i < arg.Length; i++)
+            {
+                arg[i] = filler;
+            }
+        }
+    }
     public void PrintGraph()
     {
         var nodes = Enumerable.Range(1, acceptanceMatrix.GetLength(0)).Select(n => n.ToString()).ToList();
@@ -612,7 +626,7 @@ public class Relations
         char[] canvas = new char[canvasWidth];
 
         // Initialize the canvas with spaces
-        Array.Fill(canvas, ' ');
+        Fill(canvas, ' ');
 
         // Print the connections based on the acceptanceMatrix
         for (int i = 0; i < nodeCount; i++)
@@ -727,6 +741,9 @@ class Program
 
     static void Main()
     {
+
+        Console.WriteLine(Environment.Version);
+
         string jsonBasics = @"{
             ""entities"": [
                 ""Grass"", ""Sun"", ""Love"", ""Water"", ""Sky"", ""Birds"", ""Snow"", ""Fire"", ""Trees"", ""Mountains"", ""Star"", ""Everything""
